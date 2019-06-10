@@ -133,6 +133,7 @@ class ProviderController
   end
 
   #TODO: abstract the puts into something that's in control of input and output
+  # move printing into its own function/class
   def self.view_schedule
     prompt = TTY::Prompt.new(interrupt: :exit)
     all_names = []

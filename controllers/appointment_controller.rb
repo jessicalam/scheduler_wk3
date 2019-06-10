@@ -49,11 +49,11 @@ class AppointmentController
 
       providers_with_service = []
       ProviderController.all.each do |provider|
-	    provider.services.each do |serv|
-	            if serv.name == service
-	        	providers_with_service << provider
-	            end    
-	    end
+	      provider.services.each do |serv|
+          if serv.name == service
+            providers_with_service << provider
+          end
+	      end
       end
       provider = prompt.select("Please select from these providers:", providers_with_service.map{|provider| provider.name})
       month = prompt.ask("What month in 2020 would you like to have the appointment?")
