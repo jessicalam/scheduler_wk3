@@ -3,19 +3,19 @@
 A program to help schedule appointments for service providers.
 
 
-##Week 3 Project
-###GOALS:
+## Week 3 Project
+### GOALS:
 - fix the small things
    - small functions and print functions listed below
--implement avalibility block in both files. 
+- implement avalibility block in both files. 
    - models need a class
    - Matt will work on this
--put in 2 tests
--small UI improvements
--make it so the program doesn't crash if there is no data
+- put in 2 tests
+- small UI improvements
+- make it so the program doesn't crash if there is no data
     - Jessica will work on this
  
-##Files Review
+## Files Review
 scheduler.rb
 10/10 
 - very easy to understand. no improvements needed so far yet
@@ -26,7 +26,7 @@ seed.rb
  
 utilitities 
 10/10
--just data, very straightforward
+- just data, very straightforward
  
 /models/appointment.rb 
 10/10
@@ -51,10 +51,10 @@ utilitities
  
 /controllers/appointment_controller.rb
 9/10
--lots of lines
+- lots of lines
  
 /controllers/avalibility_block.rb
--0/10
+0/10
  
 /controllers/client_controller
 8/10 
@@ -72,5 +72,5 @@ utilitities
  
 /controllers/view_schedule_controller.rb
 10/10
--not much to improve
+- not much to improve
  
