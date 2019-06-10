@@ -57,9 +57,27 @@ class AppointmentController
       end
       provider = prompt.select("Please select from these providers:", providers_with_service.map{|provider| provider.name})
       month = prompt.ask("What month in 2020 would you like to have the appointment?")
+      while (month.to_i < 1 || month.to_i > 12 || !month)
+          puts "Error: Invalid Month"
+          month = prompt.ask("What month in 2020 would you like to have the appointment?")
+        end
+      end
       day = prompt.ask("What day of the month would you like to have the appointment?")
+      while (day.to_i < 1 || day.to_i > 31 || !day)
+        puts "Error: Invalid Day"
+        line_break()
+        day = prompt.ask("What day of the month would you like to have the appointment?")
+      end
       date = Date.new(2020,month.to_i,day.to_i)
       start_time = prompt.ask("What time would you like to start the appointment?")
+      while true
+        if start_time != nil
+          break
+        else
+          puts "Error: Not a valid start time. Please enter a valid start time below. "
+          start_time = prompt.ask("What time would you like to start the appointment?")
+        end
+      end
 
       client_object = (ClientController.all.select{|client_name| client_name.name == client})[0]
       provider_object = (ProviderController.all.select{|provider_name| provider_name.name == provider})[0]

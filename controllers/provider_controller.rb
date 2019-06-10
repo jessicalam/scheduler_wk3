@@ -36,11 +36,26 @@ class ProviderController
     prompt = TTY::Prompt.new(interrupt: :exit)
 
     name = prompt.ask('Provider Name:')
+		while true
+			if name != nil
+				break
+			else
+				puts "Error: Not a valid name. Please enter a valid name below. "
+				name = prompt.ask('Provider Name:')
+			end
+		end
     phone_number = prompt.ask('Phone number:')
+		while true
+			if phone_number != nil
+				break
+			else
+				puts "Error: Not a phone number. Please enter a valid phone number below. "
+				phone_number = prompt.ask('Phone number:')
+			end
+		end
     service_types = $service_list.map { |service| service.name}
-    choices = service_types
     services_names = prompt.multi_select("Please choose services from the 
-                following list:", choices)
+                following list:", service_types)
     services = [] 
     services_names.each do |selected_service|
 	    $service_list.each do |service|
@@ -148,7 +163,7 @@ class ProviderController
     selected_provider.scheduled_appointments.map do |appt|
       puts "Client name: #{appt.client}
       Service: #{appt.service}
-      Daste: #{appt.date}
+      Date: #{appt.date}
       Start time: #{appt.start_time}
       "
     end
