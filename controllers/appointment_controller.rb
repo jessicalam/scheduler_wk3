@@ -60,7 +60,6 @@ class AppointmentController
       while (month.to_i < 1 || month.to_i > 12 || !month)
           puts "Error: Invalid Month"
           month = prompt.ask("What month in 2020 would you like to have the appointment?")
-        end
       end
       day = prompt.ask("What day of the month would you like to have the appointment?")
       while (day.to_i < 1 || day.to_i > 31 || !day)
@@ -191,5 +190,4 @@ class AppointmentController
 
     # puts @appointment_delete
   end
-    
 end
