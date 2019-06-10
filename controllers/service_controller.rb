@@ -20,9 +20,36 @@ class ServiceController
   def self.add
     prompt = TTY::Prompt.new(interrupt: :exit)
     name = prompt.ask('Name:')
+    while true
+      if name != nil
+        break
+      else
+        puts "Error: Not a valid name. Please enter a valid name below. "
+        name = prompt.ask('Name:')
+      end
+    end
+
     price = prompt.ask('Price($):')
+    while true
+      if price != nil
+        break
+      else
+        puts "Error: Not a valid price. Please enter a valid price below. "
+        price = prompt.ask('Price($):')
+      end
+    end
+
     duration = prompt.ask('Duration(hours):')
-    
+
+    while true
+      if duration != nil
+        break
+      else
+        puts "Error: Not a valid duration. Please enter a valid duration below. "
+        duration = prompt.ask('Duration(hours):')
+      end
+    end
+
     service = Service.new(name, price, duration)
     $service_list << service
 
