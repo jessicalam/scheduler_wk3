@@ -64,7 +64,6 @@ class AppointmentController
       day = prompt.ask("What day of the month would you like to have the appointment?")
       while (day.to_i < 1 || day.to_i > 31 || !day)
         puts "Error: Invalid Day"
-        line_break()
         day = prompt.ask("What day of the month would you like to have the appointment?")
       end
       date = Date.new(2020,month.to_i,day.to_i)
