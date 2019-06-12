@@ -4,25 +4,23 @@ require 'set'
 require_relative '../models/provider'
 require_relative '../models/service'
 require_relative '../utilities'
+require_relative '../seed'
 include DaysOfWeek
 
 class ProviderController
-  attr_accessor :providers, :available_days, :services
-   @providers = []
-#  @providers = [Provider.new('Junius', '234-486-9800', @service_types),     
+  attr_accessor :providers, :days_off, :services
+#  $provider_list = [Provider.new('Junius', '234-486-9800', @service_types),     
 #                Provider.new('Pearl', '978-123-5768', @service_types),
 #                Provider.new('Rifty', '008-111-2590', @service_types)]
 
-  @services = []
-  @available_days = Set[]
   def self.all
-    @providers
+    $provider_list
   end
 
  # def self.index
  #   puts "Here's the current list of providers:"
 
- #   @providers.map do |provider|
+ #   $provider_list.map do |provider|
  #     puts "#{provider.name}'s phone number is #{provider.phone_number}."
  #     puts "(S)he provides these services: #{provider.services} every day of the week except for:"
  #     provider.days_off.each do |day|
@@ -54,9 +52,9 @@ class ProviderController
 			end
 		end
     service_types = $service_list.map { |service| service.name}
-    services_names = prompt.multi_select("Please choose services from the 
+    services_names = prompt.multi_select("Please choose services from the
                 following list:", service_types)
-    services = [] 
+    services = []
     services_names.each do |selected_service|
 	    $service_list.each do |service|
 		    if(service.name == selected_service)
@@ -65,28 +63,28 @@ class ProviderController
 	    end
     end
 
-    days_off = prompt.multi_select('Days off:', ['Monday', 'Tuesday', 'Wednesday', 
+    days_off = prompt.multi_select('Days off:', ['Monday', 'Tuesday', 'Wednesday',
                 'Thursday', 'Friday', 'Saturday', 'Sunday'])
     success = add_provider(name, phone_number, services, days_off)
   end
 
   def self.remove
     prompt = TTY::Prompt.new(interrupt: :exit)
-    options = @providers.map { |provider| provider.name}
-    choice = prompt.select("Pick a provider to remove", options)
+    options = $provider_list.map { |provider| provider.name}
+    choice = prompt.select("Pick a provider to remove", options, cycle: true)
 
-    @providers = @providers.reject { |provider| provider.name == choice}
+    $provider_list = $provider_list.reject { |provider| provider.name == choice}
   end
 
 
   def self.add_availability
 	prompt = TTY::Prompt.new(interrupt: :exit)
 	all_names = []
-	@providers.each { |provider| all_names << provider.name}
+	$provider_list.each { |provider| all_names << provider.name}
 
-	provider_name = prompt.select("Which provider's schedule would you like to see?", all_names)
+	provider_name = prompt.select("For which provider would you like to add days off?", all_names, cycle: true)
 
-	selected_provider = @providers.select { |provider| provider.name == provider_name}[0]
+	selected_provider = $provider_list.select { |provider| provider.name == provider_name}[0]
 	availability_frequency = prompt.select("Reocurring or unique day off?", ["Reoccuring", "Unique"])
 	case availability_frequency
 	when "Reoccuring"
@@ -99,7 +97,9 @@ class ProviderController
 				if date.year > 2020
 					break
 				end
-				selected_provider.available_days << date
+				if !selected_provider.days_off.include?(date)
+					selected_provider.days_off << date
+				end
 				date = date + 7
 			end
 
@@ -108,7 +108,10 @@ class ProviderController
 	when "Unique"
 		day = prompt.ask ("Day:")
 		month = prompt.ask("Month:")
-		selected_provider.available_days << Date.new(2020,month.to_i,day.to_i)
+		date = Date.new(2020,month.to_i,day.to_i)
+		if !selected_provider.days_off.include?(date)
+			selected_provider.days_off << date
+		end
 	end
 
   end
@@ -117,11 +120,11 @@ class ProviderController
 
 	prompt = TTY::Prompt.new(interrupt: :exit)
 	all_names = []
-	@providers.each { |provider| all_names << provider.name}
+	$provider_list.each { |provider| all_names << provider.name}
 
-	provider_name = prompt.select("Which provider's schedule would you like to see?", all_names)
+	provider_name = prompt.select("For which provider would you like to remove days off?", all_names, cycle: true)
 
-	selected_provider = @providers.select { |provider| provider.name == provider_name}[0]
+	selected_provider = $provider_list.select { |provider| provider.name == provider_name}[0]
 	availability_frequency = prompt.select("Reocurring or unique day off?", ["Reoccuring", "Unique"])
 	case availability_frequency
 	when "Reoccuring"
@@ -134,7 +137,9 @@ class ProviderController
 				if date.year > 2020
 					break
 				end
-				selected_provider.available_days.delete(date)
+				if selected_provider.days_off.include?(date)
+					selected_provider.days_off.delete(date)
+				end
 				date = date + 7
 			end
 
@@ -143,7 +148,10 @@ class ProviderController
 	when "Unique"
 		day = prompt.ask ("Day:")
 		month = prompt.ask("Month:")
-		selected_provider.available_days.delete(Date.new(2020,month.to_i,day.to_i))
+		date = Date.new(2020,month.to_i,day.to_i)
+		if selected_provider.days_off.include?(date)
+			selected_provider.days_off.delete(date)
+		end
 	end
   end
 
@@ -152,11 +160,11 @@ class ProviderController
   def self.view_schedule
     prompt = TTY::Prompt.new(interrupt: :exit)
     all_names = []
-    @providers.each { |provider| all_names << provider.name}
+    $provider_list.each { |provider| all_names << provider.name}
 
-    provider_name = prompt.select("Which provider's schedule would you like to see?", all_names)
+    provider_name = prompt.select("Which provider's schedule would you like to see?", all_names, cycle: true)
 
-    selected_provider = @providers.select { |provider| provider.name == provider_name}[0]
+    selected_provider = $provider_list.select { |provider| provider.name == provider_name}[0]
 
     puts "----------\n"
     puts "Below are the appointments on #{selected_provider.name}'s calendar:"
@@ -185,7 +193,7 @@ class ProviderController
 
 	end
 	provider = Provider.new(name, phone_number, services, dates_off)
-	@providers << provider
+	$provider_list << provider
 	puts "\n"
 	puts "#{provider.name} is successfully added."
 	puts "\n"
