@@ -14,10 +14,10 @@ class ViewScheduleController
     prompt.say('----------')
 
     # Get Provider
-    provider = prompt.select("Choose a Service Provider (hit control + c to exit)", %w(Junius Eddie Vlad))
+    provider = prompt.select("Choose a Service Provider (hit control + c to exit)", %w(Junius Eddie Vlad), cycle: true)
 
     # Get Day
-    day = prompt.select("Choose a day of the week (hit control + c to exit)", %w(Monday Tuesday Wendesday Thursday Friday Saturday Sunday))
+    day = prompt.select("Choose a day of the week (hit control + c to exit)", %w(Monday Tuesday Wendesday Thursday Friday Saturday Sunday), cycle: true)
 
     # Get Services for each Provider on a particular day
     appointments = AppointmentController    

@@ -1,7 +1,6 @@
 class Client
-	attr_accessor :id, :name, :appointments
-	def initialize(id, name, appointments = [])
-		@id = id
+	attr_accessor :name, :appointments
+	def initialize(name, appointments = [])
 		@name = name
 		@appointments = appointments
 	end

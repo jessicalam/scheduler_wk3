@@ -37,25 +37,35 @@ class AppointmentController
 
       if client_response
         # add new client
+        new_client_name = prompt.ask('New client name:')
+        while true
+          if new_client_name != nil
+            break
+          else
+            puts "Error: Not a valid name. Please enter a valid name below. "
+            new_client_name = prompt.ask('New client name:')
+          end
+        end
+        $client_list << Client.new(new_client_name, [])
       else
-        client = prompt.select("Select the client:", ClientController.all
-                                                      .map{|c| c.name})
+        client = prompt.select("Select the client:", $client_list
+                                                      .map{|c| c.name}, cycle: true)
       end
 
       service_names = $service_list.map do |service|
 	      service.name
       end
-      service = prompt.select('Service wanted:', service_names) 
+      service = prompt.select('Service wanted:', service_names, cycle: true)
 
       providers_with_service = []
-      ProviderController.all.each do |provider|
+      $provider_list.each do |provider|
 	      provider.services.each do |serv|
           if serv.name == service
             providers_with_service << provider
           end
 	      end
       end
-      provider = prompt.select("Please select from these providers:", providers_with_service.map{|provider| provider.name})
+      provider = prompt.select("Please select from these providers:", providers_with_service.map{|provider| provider.name}, cycle: true)
       month = prompt.ask("What month in 2020 would you like to have the appointment?")
       while (month.to_i < 1 || month.to_i > 12 || !month)
           puts "Error: Invalid Month"
@@ -77,8 +87,8 @@ class AppointmentController
         end
       end
 
-      client_object = (ClientController.all.select{|client_name| client_name.name == client})[0]
-      provider_object = (ProviderController.all.select{|provider_name| provider_name.name == provider})[0]
+      client_object = ($client_list.select{|client_name| client_name.name == client})[0]
+      provider_object = ($provider_list.select{|provider_name| provider_name.name == provider})[0]
 
       appointment = add_appointment(client_object, service, provider_object, date, start_time)
 
@@ -99,16 +109,16 @@ class AppointmentController
     prompt = TTY::Prompt.new(interrupt: :exit)
 
     # choose provider
-    provider = prompt.select("Please select the provider:", ProviderController.all
-                                                                      .map{|p| p.name})
+    provider = prompt.select("Please select the provider:", $provider_list
+                                                                      .map{|p| p.name}, cycle: true)
 
-    provider_object = (ProviderController.all.select{|provider_name| provider_name.name == provider})[0]
+    provider_object = ($provider_list.select{|provider_name| provider_name.name == provider})[0]
 
     # choose the name of the client
     provider_clients = provider_object.scheduled_appointments.map{|pc| pc.client.name}
     if provider_clients.size() > 0
-      client = prompt.select("Choose the client:", provider_clients)
-      client_object = (ClientController.all.select{|client_name| client_name.name == client})[0]
+      client = prompt.select("Choose the client:", provider_clients, cycle: true)
+      client_object = ($client_list.select{|client_name| client_name.name == client})[0]
     else
       puts "
       No clients for the selected provider
@@ -121,10 +131,10 @@ class AppointmentController
 
     # choose a date and start time from the provider
     provider_dates = client_object.appointments.map{|appt| appt.date.to_s}
-    date = prompt.select('Select the appointment date:', provider_dates)
+    date = prompt.select('Select the appointment date:', provider_dates, cycle: true)
 
     provider_times = client_object.appointments.map{|appt| appt.start_time.to_s}
-    start_time = prompt.select('Select the appointment time:', provider_times)
+    start_time = prompt.select('Select the appointment time:', provider_times, cycle: true)
 
     #delete
     success = remove_appointment(client, provider, date, start_time)
@@ -139,9 +149,9 @@ class AppointmentController
     key_of_day = @appointment_candidate.date.wday
     day_of_week = DaysOfWeek::DAY_OF_WEEK[key_of_day]
     provider_name = @appointment_candidate.provider.name
-    provider_days_off = ProviderController.all.find { |provider| provider.name == provider_name}.days_off
+    provider_days_off = $provider_list.find { |provider| provider.name == provider_name}.days_off
     
-    return false if provider_days_off.include?(day_of_week) 
+    return false if provider_days_off.include?(day_of_week) # days_off has specific dates, not days of week
     return false if conflict?
     true
   end
@@ -169,17 +179,17 @@ class AppointmentController
 
   def self.add_appointment(client, service, provider, date, start_time)
     @appointment_candidate = Appointment.new(client, service, provider, date, start_time)
-    
+
 
     if check_availability
-      selected_provider = ProviderController.all.select { |p| p.name == provider.name }[0]
+      selected_provider = $provider_list.select { |p| p.name == provider.name }[0]
 
       @appointments << @appointment_candidate
       selected_provider.scheduled_appointments << @appointment_candidate
       client.appointments << @appointment_candidate
 
       return @appointment_candidate
-    else 
+    else
       return nil
     end
   end

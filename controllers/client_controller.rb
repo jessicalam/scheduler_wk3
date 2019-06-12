@@ -7,14 +7,7 @@ require_relative '../models/client'
 class ClientController
     attr_accessor :clients
 
-    @clients = [Client.new(0, 'Vlad', []),
-                Client.new(1, 'Eddie', [])]
-
     def self.all
-        @clients
-    end
-
-    def self.add
-    
+        $client_list
     end
 end

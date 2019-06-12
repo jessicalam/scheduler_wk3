@@ -5,7 +5,7 @@ require_relative '../seed'
 class ServiceController
 
   def self.all
-    @services
+    $service_list
   end
 
   def self.index
@@ -66,10 +66,10 @@ class ServiceController
 
   def self.remove
     prompt = TTY::Prompt.new(interrupt: :exit)
-    options = @services.map { |service| service.name}
-    choice = prompt.select("Pick a service to delete", options)
+    options = $service_list.map { |service| service.name}
+    choice = prompt.select("Pick a service to delete", options, cycle: true)
     
-    $service_list = @services.delete_if { |service| service.name == choice }
+    $service_list = $service_list.delete_if { |service| service.name == choice }
 
     puts "\n"
     puts "#{choice} is successfully removed."
