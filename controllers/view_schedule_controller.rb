@@ -5,22 +5,24 @@ require_relative './appointment_controller'
 
 class ViewScheduleController
   def self.view_schedule
-    appointments = AppointmentController.all
-    puts appointments
     prompt = TTY::Prompt.new(interrupt: :exit)
-    # Let the user know what they will be doing
-    prompt.say('----------')
-    prompt.say("Let's view a schedule for a Service Provider.\nFirst you'll select a Provider, a Day, then a Service with that Provider.")
-    prompt.say('----------')
+    all_names = []
+    $provider_list.each { |provider| all_names << provider.name}
 
-    # Get Provider
-    provider = prompt.select("Choose a Service Provider (hit control + c to exit)", %w(Junius Eddie Vlad), cycle: true)
+    provider_name = prompt.select("Which provider's schedule would you like to see?", all_names, cycle: true)
 
-    # Get Day
-    day = prompt.select("Choose a day of the week (hit control + c to exit)", %w(Monday Tuesday Wendesday Thursday Friday Saturday Sunday), cycle: true)
+    selected_provider = $provider_list.select { |provider| provider.name == provider_name}[0]
 
-    # Get Services for each Provider on a particular day
-    appointments = AppointmentController    
-    services = prompt.multi_select("Select a service for this day", %w(One Two Three))
+    puts "----------\n"
+    puts "Below are the appointments on #{selected_provider.name}'s calendar:"
+    selected_provider.scheduled_appointments.map do |appt|
+      puts "
+            Client name: #{appt.client.name}
+            Service: #{appt.service}
+            Date: #{appt.date}
+            Start time: #{appt.start_time}:00
+      "
+    end
+    puts "----------\n"
   end
 end
