@@ -56,7 +56,7 @@ class ServiceController
     puts "\n"
     puts "#{service.name} is successfully added."
     puts "\n"
-    puts self.index
+    # puts self.index
   end
 
   def self.add_service(name, price, duration)
@@ -74,7 +74,7 @@ class ServiceController
     puts "\n"
     puts "#{choice} is successfully removed."
     puts "\n"
-    puts self.index
+    # puts self.index
   end
   def self.remove_service(service_name)
 
