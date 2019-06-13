@@ -3,6 +3,7 @@ require '../controllers/provider_controller'
 require '../controllers/appointment_controller'
 require '../controllers/client_controller'
 
+
 RSpec.describe AppointmentController do 
     describe "#add_appointment" do
 
