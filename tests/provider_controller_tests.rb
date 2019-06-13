@@ -11,5 +11,11 @@ RSpec.describe ProviderController do
 
             expect(providers.size()).to eq(1)
         end
+        it "remove a Provider" do
+            ProviderController.send :remove_provider, 'Test', '123-456-7890', ['Test Service 1'], ['Monday']
+            providers = ProviderController.send :all
+
+            expect(providers.size()).to eq(0)
+        end
     end
 end
