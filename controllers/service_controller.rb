@@ -10,7 +10,7 @@ class ServiceController
 
   def self.index
     puts "Here's the current list of services:"
-    
+
     $service_list.map do |service|
       puts "#{service.name} costs $#{service.price}, and takes about #{service.duration} hours."
       puts "––––––––––"
@@ -68,13 +68,12 @@ class ServiceController
     prompt = TTY::Prompt.new(interrupt: :exit)
     options = $service_list.map { |service| service.name}
     choice = prompt.select("Pick a service to delete", options, cycle: true)
-    
+
     $service_list = $service_list.delete_if { |service| service.name == choice }
 
     puts "\n"
     puts "#{choice} is successfully removed."
     puts "\n"
-    # puts self.index
   end
   def self.remove_service(service_name)
 
