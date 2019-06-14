@@ -1,3 +1,7 @@
+# This file contains all tests from the other files in the tests folder
+# run this to see coverage for the entire test suite
+
+
 require 'simplecov'
 SimpleCov.start
 
@@ -68,3 +72,37 @@ RSpec.describe AppointmentController do
     end
 end
 
+RSpec.describe ServiceController do 
+    describe "#add_service" do
+        it "adds a Service to global service_list" do
+		ServiceController.add_service("Test", "1", "1")
+		expect($service_list.size()).to eq(5)	
+        end
+    end
+
+    describe "#remove_service" do
+        it "removes a Service from global service_list" do
+		ServiceController.remove_service("Liver Transplant")
+        	expect($service_list.size()).to eq(4)	
+        end
+    end
+
+end
+
+RSpec.describe ProviderController do 
+    describe "#add_provider" do
+        it "add a Provider" do
+            ProviderController.send :add_provider, 'Test', '123-456-7890', ['Test Service 1'], ['Monday']
+            providers = ProviderController.send :all
+
+            expect(providers.size()).to eq(3)
+        end
+        it "remove a Provider" do
+            ProviderController.send :add_provider, 'Test', '123-456-7890', ['Test Service 1'], ['Monday']
+            ProviderController.send :remove_provider , 'Test'
+            providers = ProviderController.send :all
+
+            expect(providers.size()).to eq(2)
+        end
+    end
+end

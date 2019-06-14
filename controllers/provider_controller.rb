@@ -71,9 +71,9 @@ class ProviderController
   def self.remove
     prompt = TTY::Prompt.new(interrupt: :exit)
     options = $provider_list.map { |provider| provider.name}
-    choice = prompt.select("Pick a provider to remove", options, cycle: true)
+	choice = prompt.select("Pick a provider to remove", options, cycle: true)
 
-    $provider_list = $provider_list.reject { |provider| provider.name == choice}
+	remove_provider(choice)
   end
 
 
@@ -198,5 +198,9 @@ class ProviderController
 	puts "#{provider.name} is successfully added."
 	puts "\n"
 	#puts self.index
+  end
+
+  def self.remove_provider(name)
+	$provider_list = $provider_list.reject { |provider| provider.name == name}
   end
 end

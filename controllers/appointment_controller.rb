@@ -210,8 +210,11 @@ class AppointmentController
   end
 
   def self.remove_appointment(client, provider, date, start_time)
-    @appointment_delete = (@appointments.each {|a| a.client == client}) #&& a.provider == provider && a.date == date && a.start_time == start_time}
+    # @appointment_delete = (@appointments.each {|a| a.client == client}) #&& a.provider == provider && a.date == date && a.start_time == start_time}
 
+    @appointments = @appointments.delete_if { |app| app.client == client && app.provider == provider && app.date == date && app.start_time == start_time }
+    selected_provider = $provider_list.select { |p| p.name == provider.name }[0]
+    selected_provider.scheduled_appointments = selected_provider.scheduled_appointments.delete_if { |app| app.client == client && app.provider == provider && app.date == date && app.start_time == start_time }
     # puts @appointment_delete
   end
 end
