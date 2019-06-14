@@ -100,7 +100,9 @@ class AppointmentController
 
         continueProgram = false
       else
-        puts "Your requested appointment is not available, please try a different request."
+        puts "\x1b[31mYour requested appointment is not available, please try a different request.\x1b[0m"
+        puts
+        puts
       end
     end
   end

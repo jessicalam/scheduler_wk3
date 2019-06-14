@@ -24,5 +24,7 @@ class ViewScheduleController
       "
     end
     puts "----------\n"
+    puts
+    puts
   end
 end
