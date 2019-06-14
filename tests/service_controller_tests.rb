@@ -1,3 +1,5 @@
+require 'simplecov'
+SimpleCov.start
 
 require_relative '../controllers/service_controller'
 require_relative '../controllers/provider_controller'
@@ -15,7 +17,7 @@ RSpec.describe ServiceController do
 
     describe "#remove_service" do
         it "removes a Service from global service_list" do
-		ServiceController.remove_service("Liver Transplants")
+		ServiceController.remove_service("Liver Transplant")
         	expect($service_list.size()).to eq(4)	
         end
     end

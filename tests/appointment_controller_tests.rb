@@ -1,7 +1,10 @@
-require '../controllers/service_controller'
-require '../controllers/provider_controller'
-require '../controllers/appointment_controller'
-require '../controllers/client_controller'
+require 'simplecov'
+SimpleCov.start
+
+require_relative '../controllers/service_controller'
+require_relative '../controllers/provider_controller'
+require_relative '../controllers/appointment_controller'
+require_relative '../controllers/client_controller'
 
 
 RSpec.describe AppointmentController do 
