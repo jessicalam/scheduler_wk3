@@ -117,24 +117,6 @@ class AppointmentController
 
     provider_object = ($provider_list.select{|provider_name| provider_name.name == provider})[0]
 
-    # choose the name of the client
-    # provider_clients = []
-    # provider_object.scheduled_appointments.map do |pc|
-    #   if !provider_clients.include?(pc.client.name)
-    #     provider_clients << pc.client.name
-    #   end
-    # end
-
-    # if provider_clients.size() > 0
-    #   client = prompt.select("Choose the client:", provider_clients, cycle: true)
-    #   client_object = ($client_list.select{|client_name| client_name.name == client})[0]
-    # else
-    #   puts "
-    #   No clients for the selected provider
-    #   "
-    #   return
-    # end
-
     # list appointments
     appointment_hash = {}
     provider_object.scheduled_appointments.each do |pa|
@@ -142,22 +124,10 @@ class AppointmentController
       appointment_hash[key] = pa
     end
 
-    # choose a date and start time from the provider
-    # provider_dates = client_object.appointments.map{|appt| appt.date.to_s}
-    # date = prompt.select('Select the appointment date:', provider_dates, cycle: true)
-
-    # provider_times = client_object.appointments.map{|appt| appt.start_time.to_s}
-    # start_time = prompt.select('Select the appointment time:', provider_times, cycle: true)
 
     appointment_to_be_deleted = prompt.select('Select the appointment:', appointment_hash.keys, cycle: true)
 
-    #delete
-    # success = remove_appointment(client, provider, date, start_time)
     provider_object.scheduled_appointments.delete(appointment_hash[appointment_to_be_deleted])
-
-
-    # are you sure?
-    # delete
 
   end
 
@@ -166,8 +136,7 @@ class AppointmentController
     day_of_week = DaysOfWeek::DAY_OF_WEEK[key_of_day]
     provider_name = @appointment_candidate.provider.name
     provider_days_off = $provider_list.find { |provider| provider.name == provider_name}.days_off
-    
-    # return false if provider_days_off.include?(day_of_week) # days_off has specific dates, not days of week
+
     return false if provider_days_off.include?(@appointment_candidate.date)
     return false if conflict?
     true
@@ -203,7 +172,6 @@ class AppointmentController
 
       @appointments << @appointment_candidate
       selected_provider.scheduled_appointments << @appointment_candidate
-      # client.appointments << @appointment_candidate
 
       return @appointment_candidate
     else
@@ -212,11 +180,9 @@ class AppointmentController
   end
 
   def self.remove_appointment(client, provider, date, start_time)
-    # @appointment_delete = (@appointments.each {|a| a.client == client}) #&& a.provider == provider && a.date == date && a.start_time == start_time}
-
+    # for testing purposes
     @appointments = @appointments.delete_if { |app| app.client == client && app.provider == provider && app.date == date && app.start_time == start_time }
     selected_provider = $provider_list.select { |p| p.name == provider.name }[0]
     selected_provider.scheduled_appointments = selected_provider.scheduled_appointments.delete_if { |app| app.client == client && app.provider == provider && app.date == date && app.start_time == start_time }
-    # puts @appointment_delete
   end
 end

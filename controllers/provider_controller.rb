@@ -9,26 +9,10 @@ include DaysOfWeek
 
 class ProviderController
   attr_accessor :providers, :days_off, :services
-#  $provider_list = [Provider.new('Junius', '234-486-9800', @service_types),     
-#                Provider.new('Pearl', '978-123-5768', @service_types),
-#                Provider.new('Rifty', '008-111-2590', @service_types)]
 
   def self.all
     $provider_list
   end
-
- # def self.index
- #   puts "Here's the current list of providers:"
-
- #   $provider_list.map do |provider|
- #     puts "#{provider.name}'s phone number is #{provider.phone_number}."
- #     puts "(S)he provides these services: #{provider.services} every day of the week except for:"
- #     provider.days_off.each do |day|
- #             puts day 
- #     end
- #     puts "––––––––––"
- #   end
- # end
 
   def self.add
     prompt = TTY::Prompt.new(interrupt: :exit)
@@ -155,8 +139,6 @@ class ProviderController
 	end
   end
 
-  #TODO: abstract the puts into something that's in control of input and output
-  # move printing into its own function/class
   def self.view_schedule
     prompt = TTY::Prompt.new(interrupt: :exit)
     all_names = []
@@ -197,7 +179,6 @@ class ProviderController
 	puts "\n"
 	puts "#{provider.name} is successfully added."
 	puts "\n"
-	#puts self.index
   end
 
   def self.remove_provider(name)
